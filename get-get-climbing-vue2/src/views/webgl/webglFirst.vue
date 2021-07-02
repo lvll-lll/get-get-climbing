@@ -1,5 +1,4 @@
 <template>
-    <!-- <div>webgl first page</div> -->
     <canvas id="c"></canvas>
 </template>
 

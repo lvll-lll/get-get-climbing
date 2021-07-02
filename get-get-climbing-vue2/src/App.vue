@@ -1,12 +1,15 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
+    <navigation></navigation>
     <router-view/>
   </div>
 </template>
 
 <script>
+import navigation from '@/components/navigation/index.vue'
 export default {
+  components: {navigation},
   name: 'App'
 }
 </script>
@@ -18,6 +21,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: #F9F9F9;
+  /* margin-top: 60px; */
 }
 </style>

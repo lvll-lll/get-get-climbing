@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <!-- <h2>Essential Links</h2> -->
     <ul>
       <li v-for="item in list" :key="item.value" @click="handleClick(item)">
         <a
@@ -21,14 +21,15 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       list: [
-        { label: 'baidu', value: 'baidu', href: 'http://www.baidu.com' }
+        { label: 'baidu', value: 'baidu', href: 'http://www.baidu.com', router: '/webglFirst' },
+        // eslint-disable-next-line standard/object-curly-even-spacing
+        { label: 'transfer', value: 'transfer', router: '/transfer'}
       ]
     }
   },
   methods: {
     handleClick (item) {
-      console.log(item)
-      this.$router.push('/webglFirst')
+      this.$router.push(item.router)
     }
   }
 }
@@ -46,6 +47,7 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+  cursor: pointer;
 }
 a {
   color: #42b983;

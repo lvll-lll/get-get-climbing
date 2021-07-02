@@ -14,6 +14,10 @@ export default new Router({
       path: '/webglFirst',
       name: 'webglFirst',
       component: () => import('@/views/webgl/webglFirst.vue')
+    }, {
+      path: '/transfer',
+      name: 'transfer',
+      component: () => import('@/views/transfer/transfer.vue')
     }
   ]
 })
