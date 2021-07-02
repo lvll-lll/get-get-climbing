@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>map</title>
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+  <style type="text/css">
+      html, body, #map {
+          border: 0px;
+          margin: 0px;
+          padding: 0px;
+          width: 100%;
+          height: 100%;
+          font-size: 13px;
+          background: white;
+      }
+  </style>
+  <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+  <script type="text/javascript">
+      var map;
+      function init(){
+          var vec_c = getTileLayer();
+          var bounds = [8126322.827908971, 356407.7081140086, 15139450.747885207, 7094762.123545771];
+          map = new ol.Map({
+              controls: ol.control.defaults({
+                  attribution: false
+              }),
+              target: 'map',
+              layers: [vec_c],
+              view: new ol.View({
+                  minZoom:0,
+                  maxZoom:15,
+                  extent: bounds
+              })
+          });
+          map.getView().fit(bounds, map.getSize());
+      }
+      function getTileLayer(){
+          var url = "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}";
+          var layer = new ol.layer.Tile({
+              source: new ol.source.XYZ({
+                  url:url
+              })
+          });
+          return layer;
+      }
+  </script>
+</head>
+<body onLoad="init()">
+<div id="map">
+</div>
+</body>
+</html>
