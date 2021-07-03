@@ -61,7 +61,21 @@ export default {
     ElButton
   },
 
+  // model: {
+  //   prop: 'transferData',
+  //   event: 'changeData'
+  // },
+
   props: {
+    // transferData: {
+    //   type: Object,
+    //   default () {
+    //     return {
+    //       'source': [],
+    //       'target': []
+    //     }
+    //   }
+    // },
     data: {
       type: Array,
       default () {
@@ -134,7 +148,11 @@ export default {
   data () {
     return {
       leftChecked: [],
-      rightChecked: []
+      rightChecked: [],
+      transferData: {
+        'source': [],
+        'target': []
+      }
     }
   },
 
@@ -145,13 +163,35 @@ export default {
     },
 
     sourceData () {
+      let source = this.data.filter(item => this.value.indexOf(item[this.props.key]) === -1)
+      console.log('1. source data ----------------------', source)
+      let temp = this.transferData
+      temp['source'] = source
+      this.$emit('changeData', temp)
       return this.data.filter(item => this.value.indexOf(item[this.props.key]) === -1)
     },
 
     targetData () {
+      let target = null
       if (this.targetOrder === 'original') {
+        target = this.data.filter(item => this.value.indexOf(item[this.props.key]) > -1)
+        console.log('2. target data ------------------   order original', target)
+        let temp = this.transferData
+        temp['target'] = target
+        this.$emit('changeData', temp)
         return this.data.filter(item => this.value.indexOf(item[this.props.key]) > -1)
       } else {
+        target = this.value.reduce((arr, cur) => {
+          const val = this.dataObj[cur]
+          if (val) {
+            arr.push(val)
+          }
+          return arr
+        }, [])
+        console.log('3. target data ------------------   order not original', target)
+        let temp = this.transferData
+        temp['target'] = target
+        this.$emit('changeData', temp)
         return this.value.reduce((arr, cur) => {
           const val = this.dataObj[cur]
           if (val) {

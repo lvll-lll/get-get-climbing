@@ -16,18 +16,29 @@
       </div>
     </ElTransfer>
     <div style="height:20px"></div>
-    <ElTransfer v-model="value" :data="dataObjItems" filterable
+    <ElTransfer v-model="value" :data="data" filterable
       :props="{
         key:'value',
         label:'label'
       }"
       :render-content="renderFunc"
       :manualChange="true"
+      @changeData="changeData"
       >
       <div slot="left-top-filter">
         <el-select v-model="selectLeft" placeholder="请选择">
           <el-option
             v-for="item in optionsLeft"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+      <div slot="right-top-filter">
+        <el-select v-model="selectRight" placeholder="请选择">
+          <el-option
+            v-for="item in optionsRight"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -64,28 +75,60 @@ export default {
       data: generateData(),
       value: [1, 4],
       options: dataObjItems,
-      dataObjItems: dataObjItems,
+      data: dataObjItems,
       select: '',
       selectLeft: '',
       renderFunc(h, option) {
         // return <span>{ option.value } - { option.label }（{option.type}）</span>;
         return <span>{ option.label }（{option.type}）</span>;
       },
-      optionsLeft: []
+      optionsLeft: [],
+      optionsRight: [],
+      dataTemp:[],
+      selectRight: ''
     }
   },
   watch: {
     selectLeft(val) {
       console.log(val)
+      this.data = this.dataTemp.filter(item => item.type === val)
+    },
+    selectRight(val) {
+      this.optionsRight = this.transferData['target'].filter(item => item.type === val)
     }
   },
   mounted() {
     this.initLeftSelect()
   },
   methods:{
+    changeData(val) {
+      console.log('0----------------',val)
+      this.transferData = val
+      let tempTarget = []
+      let tempSource = []
+      val['target'].map(item => {
+        if(!tempTarget.includes(item.type)) {
+          this.optionsLeft.push({
+            label: item.type,
+            value: item.type
+          })
+          tempTarget.push(item.type)
+        }
+      })
+      val['source'].map(item => {
+        if(!tempSource.includes(item.type)) {
+          this.optionsLeft.push({
+            label: item.type,
+            value: item.type
+          })
+          tempSource.push(item.type)
+        }
+      })
+    },
     initLeftSelect() {
+      this.dataTemp = this.data
       let temp = []
-      this.dataObjItems.map(item => {
+      this.data.map(item => {
         if(!temp.includes(item.type)) {
           this.optionsLeft.push({
             label: item.type,
