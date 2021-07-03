@@ -14,14 +14,12 @@ export default {
   data () {
     return {
       list: [
-        { key: 'transfer', label: 'transfer', router: '/transfer' },
-        { key: 'map', label: 'map', router: '/map' }
       ]
     }
   },
   methods: {
-    handleClick (item) {
-      this.$router.push(item.router)
+    handleCommand (item) {
+      this.$router.push(item)
     }
   }
 }
@@ -33,22 +31,7 @@ export default {
   background: #ffffff;
   height: 68px;
   line-height: 68px;
-  width: 100%;
-}
-.menus {
-  overflow: hidden;
-  li {
-    float: right;
-    height: 20px;
-    line-height: 20px;
-    cursor: pointer;
-    padding: 0 20px;
-    border-right: 2px solid #1da1f2;
-    text-align: center;
-    margin-top: 25px;
-    &:first-child {
-      border-right: none;
-    }
-  }
+  /* position: fixed; */  width: 100%;
+  text-align: right;
 }
 </style>

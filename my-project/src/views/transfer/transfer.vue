@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="transfer-main">
     <ElTransfer v-model="value" :data="data" filterable>
       <div slot="left-top-filter">
         <el-select v-model="select" placeholder="请选择">
@@ -98,3 +98,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.transfer-main{
+  padding: 20px 0;
+}
+</style>
