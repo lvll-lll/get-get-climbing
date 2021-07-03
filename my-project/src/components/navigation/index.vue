@@ -1,6 +1,7 @@
+<script src="../../router/index.js"></script>
 <template>
   <div class="navigation-container">
-    <ul>
+    <ul class="menus">
       <li v-for="item in list"
           :key="item.key"
           @click="handleClick(item)">{{item.label}}</li>
@@ -13,7 +14,8 @@ export default {
   data () {
     return {
       list: [
-        { key: 'transfer', label: 'transfer', router: '/transfer' }
+        { key: 'transfer', label: 'transfer', router: '/transfer' },
+        { key: 'map', label: 'map', router: '/map' }
       ]
     }
   },
@@ -25,13 +27,28 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .navigation-container {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   background: #ffffff;
   height: 68px;
   line-height: 68px;
-  /* position: fixed; */
   width: 100%;
+}
+.menus {
+  overflow: hidden;
+  li {
+    float: right;
+    height: 20px;
+    line-height: 20px;
+    cursor: pointer;
+    padding: 0 20px;
+    border-right: 2px solid #1da1f2;
+    text-align: center;
+    margin-top: 25px;
+    &:first-child {
+      border-right: none;
+    }
+  }
 }
 </style>

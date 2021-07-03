@@ -18,6 +18,10 @@ export default new Router({
       path: '/transfer',
       name: 'transfer',
       component: () => import('@/views/transfer/transfer.vue')
+    }, {
+      path: '/map',
+      name: 'map',
+      component: () => import('@/views/map/index.vue')
     }
   ]
 })

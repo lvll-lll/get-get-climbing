@@ -1,0 +1,22 @@
+{
+  "version": 8,
+  "name": "style",
+  "sources": {
+    "XYZTile": {
+      "type": "raster",
+      "tiles": [
+        "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}"
+      ],
+      "tileSize": 256
+    }
+  },
+  "layers": [
+    {
+      "id": "XYZTile",
+      "type": "raster",
+      "source": "XYZTile",
+      "minzoom": 0,
+      "maxzoom": 22
+    }
+  ]
+}

@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 body,
 html,
 #app {
@@ -42,6 +42,7 @@ li {
   cursor: pointer;
 }
 .app-main {
-  /* height: calc(100vh - 68px); */
+  height: calc(100% - 68px);
+  width: 100%;
 }
 </style>
