@@ -18,6 +18,17 @@ export default new Router({
       path: '/transfer',
       name: 'transfer',
       component: () => import('@/views/transfer/transfer.vue')
+    }, {
+      path: '/maps',
+      name: 'maps',
+      component: () => import('@/views/maps/geoQ/index.vue')
+      // children: [
+      //   {
+      //     path: '/geoQ',
+      //     name: 'geoQ',
+      //     component: () => import('@/views/maps/geoQ/index.vue')
+      //   }
+      // ]
     }
   ]
 })
