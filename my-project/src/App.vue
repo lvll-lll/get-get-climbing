@@ -16,7 +16,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 body,
 html,
 #app {
@@ -39,9 +39,6 @@ li {
   cursor: pointer;
 }
 .app-main {
-  background: aliceblue;
-  top: 68px;
-  position: absolute;
-  width: 100%;
-}
+  height: calc(100% - 68px);
+  width: 100%;}
 </style>
