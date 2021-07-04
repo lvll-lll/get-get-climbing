@@ -5,19 +5,21 @@
 <script>
 import DomSize from 'wd-domsize-monitor'
 const style = require('./style.json')
+const buildsData = require('../../assets/data/buildings.json')
+
 export default {
   name: 'MapLoader',
   props: {
     center: {
       type: Array,
       default () {
-        return [104.6349, 34.6446]
+        return [113.8834, 22.5425]
       }
     },
     zoom: {
       type: Number,
       default () {
-        return 3.5
+        return 13.38
       }
     }
   },
@@ -40,8 +42,11 @@ export default {
         container: dom,
         maxZoom: 18,
         minZoom: 0,
-        zoom: that.zoom,
-        center: that.center,
+        // zoom: that.zoom,
+        // center: that.center,
+        center: [121.507674, 31.223043],
+        pitch: 65.59312320916906,
+        zoom: 15.4,
         style: style,
         attributionControl: false,
         trackResize: true
@@ -52,8 +57,25 @@ export default {
           that.map.resize()
         })
         that.$emit('map-loaded', that.map)
+        that.addBuilds()
       })
       window.map = that.map
+    },
+    addBuilds () {
+      this.map.addSource('buildings', {
+        type: 'geojson',
+        data: buildsData
+      })
+      this.map.addLayer({
+        'id': '3d-buildings',
+        'source': 'buildings',
+        'type': 'fill-extrusion',
+        'paint': {
+          'fill-extrusion-color': '#eee',
+          'fill-extrusion-height': ['get', 'floor'],
+          'fill-extrusion-opacity': 0.65
+        }
+      })
     }
   }
 }
