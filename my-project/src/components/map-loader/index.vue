@@ -11,7 +11,7 @@ export default {
     center: {
       type: Array,
       default () {
-        return [103.081163, 37.1612]
+        return [104.6349, 34.6446]
       }
     },
     zoom: {
@@ -53,6 +53,7 @@ export default {
         })
         that.$emit('map-loaded', that.map)
       })
+      window.map = that.map
     }
   }
 }
