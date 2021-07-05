@@ -62,11 +62,12 @@ export default {
       window.map = that.map
     },
     addBuilds () {
-      this.map.addSource('buildings', {
+      const that = this
+      that.map.addSource('buildings', {
         type: 'geojson',
         data: buildsData
       })
-      this.map.addLayer({
+      that.map.addLayer({
         'id': '3d-buildings',
         'source': 'buildings',
         'type': 'fill-extrusion',
@@ -75,6 +76,12 @@ export default {
           'fill-extrusion-height': ['get', 'floor'],
           'fill-extrusion-opacity': 0.65
         }
+      })
+      that.map.on('mouseover', '3d-buildings', evt => {
+        that.map.getCanvasContainer().style.cursor = 'pointer'
+      })
+      that.map.on('mouseleave', '3d-buildings', evt => {
+        that.map.getCanvasContainer().style.cursor = ''
       })
     }
   }
