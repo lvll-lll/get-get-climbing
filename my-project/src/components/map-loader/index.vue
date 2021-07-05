@@ -19,7 +19,7 @@ export default {
     zoom: {
       type: Number,
       default () {
-        return 13.38
+        return 13.381
       }
     }
   },
