@@ -64,7 +64,7 @@ export default {
     addBuilds () {
       this.map.addSource('buildings', {
         type: 'geojson',
-        data: buildsData
+        data: 'static/data/buildings.json'
       })
       this.map.addLayer({
         'id': '3d-buildings',
