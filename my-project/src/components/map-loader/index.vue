@@ -65,7 +65,7 @@ export default {
       const that = this
       that.map.addSource('buildings', {
         type: 'geojson',
-        data: buildsData
+        data: 'static/data/buildings.json'
       })
       that.map.addLayer({
         'id': '3d-buildings',
