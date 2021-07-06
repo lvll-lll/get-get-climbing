@@ -5,7 +5,6 @@
 <script>
 import DomSize from 'wd-domsize-monitor'
 const style = require('./style.json')
-const buildsData = require('../../assets/data/buildings.json')
 
 export default {
   name: 'MapLoader',
@@ -65,7 +64,7 @@ export default {
       const that = this
       that.map.addSource('buildings', {
         type: 'geojson',
-        data: buildsData
+        data: 'static/data/buildings.json'
       })
       that.map.addLayer({
         'id': '3d-buildings',
