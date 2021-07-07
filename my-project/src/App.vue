@@ -28,12 +28,12 @@ html,
   margin: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
   overflow: hidden;
 }
 ul {
   margin: 0;
   list-style: none;
+  padding: 0;
 }
 li {
   cursor: pointer;
