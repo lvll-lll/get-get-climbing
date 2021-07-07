@@ -15,7 +15,8 @@ export default {
     return {
       list: [
         { key: 'transfer', label: 'transfer', router: '/transfer' },
-        { key: 'map', label: 'map', router: '/map' }
+        { key: 'map', label: 'map', router: '/map' },
+        { key: 'webgl', label: 'webgl', router: '/webgl' }
       ]
     }
   },

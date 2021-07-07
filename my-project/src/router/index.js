@@ -11,10 +11,6 @@ export default new Router({
       name: 'HelloWorld',
       component: HelloWorld
     }, {
-      path: '/webglFirst',
-      name: 'webglFirst',
-      component: () => import('@/views/webgl/webglFirst.vue')
-    }, {
       path: '/transfer',
       name: 'transfer',
       component: () => import('@/views/transfer/transfer.vue')
@@ -22,6 +18,10 @@ export default new Router({
       path: '/map',
       name: 'map',
       component: () => import('@/views/map/index.vue')
+    }, {
+      path: '/webgl',
+      name: 'webgl',
+      component: () => import('@/views/webgl/drawPolygon.vue')
     }
   ]
 })
