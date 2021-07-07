@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import mapboxgl from 'mapbox-gl'
 import DomSize from 'wd-domsize-monitor'
 const style = require('./style.json')
 
