@@ -11,6 +11,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 /* eslint-disable no-new */
+// eslint-disable-next-line
 new Vue({
   el: '#app',
   router,
