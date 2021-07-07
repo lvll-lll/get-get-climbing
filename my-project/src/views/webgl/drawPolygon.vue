@@ -21,10 +21,10 @@ export default {
       let gl = canvas.getContext('webgl') 
       // 确认WebGL支持性
       if (!gl) {
-        alert('your device is not support webgl')
+        console.log('your device is not support webgl')
         return
       }
-      gl.clearColor(0.5, 0.7, 0.5, 1.0) // 支持WebGL，使用完全不透明的黑色清除所有图像
+      gl.clearColor(0.0, 0.0, 0.0, 1.0) // 支持WebGL，使用完全不透明的黑色清除所有图像
       gl.clear(gl.COLOR_BUFFER_BIT) // 用上面指定的颜色清除缓冲区
 
       this.draw2DPolygon(gl)
@@ -32,30 +32,100 @@ export default {
     // 绘制二维多边形
     draw2DPolygon(gl) {
       // 创建顶点着色器 Vertex shader program
-      const vsSource = `
-        attribute vec4 aVertexPosition;
+      // const vsSrc = 'void main() {' +
+      //       'gl_Position = vec4(0.0, 0.0, 0.0, 1.0);' + // 设置坐标
+      //       'gl_PointSize = 200.0;' +                   // 设置尺寸
+      //   '}'
+      // // 创建片段着色器 fragment shader program
+      // const fsSrc = 'void main() {' +
+      //       'gl_FragColor = vec4(1.0, 0.0, 1.0, 0.75);' + // 设置颜色
+      //   '}'
 
+      const vsSrc = `
+        attribute vec4 aVertexPosition;
         uniform mat4 uModelViewMatrix;
         uniform mat4 uProjectionMatrix;
-
         void main() {
-          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition
+          gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+          gl_PointSize = 200.0;
         }
       `;
       // 创建片段着色器 fragment shader program
-      const fsSource = `
+      const fsSrc = `
         void main() {
-          gl_FragColor = vec4(1.0,1.0,1.0,1.0)
+          gl_FragColor = vec4(1.0,1.0,1.0,1.0);
         }
       `;
-      // 初始化着色器程序
-      const shaderProgram = this.initShaderProgram(gl, vsSource, fsSource)
-      const programInfo = this.programInfo(gl,shaderProgram,'aVertexPosition', 'uProjectionMatrix','uModelViewMatrix')
 
+      // 初始化着色器程序
+      const shaderProgram = this.initShaderProgram(gl, vsSrc, fsSrc)
+      const programInfo = this.programInfo(gl,shaderProgram,'aVertexPosition', 'uProjectionMatrix','uModelViewMatrix')
       // 创建对象
       let buffers = this.initBuffer(gl)
-
       this.drawScene(gl, programInfo, buffers)
+
+      // const vsSrc = "attribute vec4 a_Position;" +
+      //   // "attribute vec4 a_Color;" +
+      //   "varying vec4 v_Color;" +
+      //   "void main(){" +
+      //   "gl_Position = a_Position;" +
+      //   // "v_Color = a_Color;" +
+      //    "}";
+      // var fsSrc =
+      //   "precision mediump float;" +
+      //   "varying vec4 v_Color;" +
+      //    "void main() {" +
+      //    "gl_FragColor = v_Color;" +
+      //    "}";
+      // 1.创建着色器对象
+      // const vs = gl.createShader(gl.VERTEX_SHADER);
+      // const fs = gl.createShader(gl.FRAGMENT_SHADER);
+      // // 检查创建结果
+      // if (vs === null) {
+      //     console.log('gl.createShader(gl.VERTEX_SHADER) failed')
+      // }
+      // if (fs === null) {
+      //      console.log('gl.createShader(gl.FRAGMENT_SHADER) failed')
+      // }
+      // // 2.填充源程序
+      // gl.shaderSource(vs, vsSrc);
+      // gl.shaderSource(fs, fsSrc);
+      // // 3.编译
+      // gl.compileShader(vs);
+      // gl.compileShader(fs);
+      // // 检查编译错误
+      // if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+      //     console.log('gl.compileShader(vs) failed')
+      //     console.log(gl.getShaderInfoLog(vs));
+      // }
+      // if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+      //     console.log('gl.compileShader(fs) failed');
+      //     console.log(gl.getShaderInfoLog(fs));   // 输出错误信息
+      // }
+      // // 4.创建程序对象
+      // var prog = gl.createProgram();
+      // // 检查创建结果
+      // if (prog === null) {
+      //     console.log('gl.createProgram() failed');
+      // }
+      // // 5.为程序对象分配着色器
+      // gl.attachShader(prog, vs);
+      // gl.attachShader(prog, fs);
+      // // 检查分配错误
+      // if (gl.getProgramParameter(prog, gl.ATTACHED_SHADERS) !== 2) {
+      //     console.log('gl.getProgramParameter(prog, gl.ATTACHED_SHADERS) failed');
+      // }
+      // // 6.连接程序对象
+      // gl.linkProgram(prog);
+      // // 检查连接错误
+      // if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      //     console.log('gl.linkProgram(prog) failed');
+      //     console.log(gl.getProgramInfoLog(prog));
+      // }
+      // // 7.使用程序对象
+      // gl.useProgram(prog);
+      // // 绘制矩形（一个点，但点的尺寸略大）
+      // gl.drawArrays(gl.POINTS, 0, 1);
     },
     // 初始化着色器程序，并且让WebGL知道如何绘制我们的数据
     initShaderProgram(gl, vsSource, fsSource) {
@@ -68,9 +138,9 @@ export default {
       gl.attachShader(shaderProgram, fragmentShader)
       gl.linkProgram(shaderProgram)
 
-      // 创建失败 alert
+      // 创建失败 console.log
       if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-        alert('initialize the shader program faild:' + gl.getProgramInfoLog(shaderProgram))
+        console.log('initialize the shader program faild:' + gl.getProgramInfoLog(shaderProgram))
       }
 
       // 创建成功，返回着色器程序
@@ -89,7 +159,7 @@ export default {
       gl.compileShader(shader)
       // 4. 调用gl.getShaderParameter，判断编译是否成功
       if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert('an error occurred compiling the shaders')
+        console.log('an error occurred compiling the shaders')
         gl.deleteShader(shader)
         return null
       }
