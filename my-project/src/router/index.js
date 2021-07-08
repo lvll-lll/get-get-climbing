@@ -21,7 +21,7 @@ export default new Router({
     }, {
       path: '/webgl',
       name: 'webgl',
-      component: () => import('@/views/webgl/drawPolygon.vue')
+      component: () => import('@/views/webgl/webGlPage.vue')
     }
   ]
 })

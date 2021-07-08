@@ -3,8 +3,8 @@
   <div class="navigation-container">
     <ul class="menus">
       <li v-for="item in list"
-          :key="item.key"
-          @click="handleClick(item)">{{item.label}}</li>
+        :key="item.key"
+        @click="handleClick(item)">{{item.label}}</li>
     </ul>
   </div>
 </template>
@@ -22,6 +22,9 @@ export default {
   },
   methods: {
     handleClick (item) {
+      if(this.$route.path === item.router) {
+        return
+      }
       this.$router.push(item.router)
     }
   }
