@@ -39,13 +39,13 @@ export default {
         uniform mat4 uProjectionMatrix;
 
         void main() {
-          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition
+          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
         }
       `;
       // 创建片段着色器 fragment shader program
       const fsSource = `
         void main() {
-          gl_FragColor = vec4(1.0,1.0,1.0,1.0)
+          gl_FragColor = vec4(1.0,1.0,1.0,1.0);
         }
       `;
       // 初始化着色器程序
@@ -71,6 +71,7 @@ export default {
       // 创建失败 alert
       if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
         alert('initialize the shader program faild:' + gl.getProgramInfoLog(shaderProgram))
+        return null
       }
 
       // 创建成功，返回着色器程序
