@@ -22,6 +22,10 @@ export default new Router({
       path: '/webgl',
       name: 'webgl',
       component: () => import('@/views/webgl/webGlPage.vue')
+    }, {
+      path: '/task',
+      name: 'task',
+      component: () => import('@/views/maps/index.vue')
     }
   ]
 })

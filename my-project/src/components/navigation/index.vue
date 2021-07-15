@@ -14,6 +14,7 @@ export default {
   data () {
     return {
       list: [
+        { key: 'task', label: 'task', router: '/task' },
         { key: 'transfer', label: 'transfer', router: '/transfer' },
         { key: 'map', label: 'map', router: '/map' },
         { key: 'webgl', label: 'webgl', router: '/webgl' }
