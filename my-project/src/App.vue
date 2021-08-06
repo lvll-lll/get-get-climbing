@@ -2,6 +2,7 @@
   <div id="app">
     <navigation></navigation>
     <div class="app-main">
+      <!-- <navigation></navigation> -->
       <router-view />
     </div>
 
@@ -24,7 +25,8 @@ html,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: #eeeded;
+  // background-color: #eeeded;
+  background-color: white;
   margin: 0;
   width: 100%;
   height: 100%;
@@ -40,5 +42,7 @@ li {
 }
 .app-main {
   height: calc(100% - 68px);
-  width: 100%;}
+  width: 100%;
+  // background: white;
+}
 </style>
