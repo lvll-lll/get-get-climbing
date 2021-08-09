@@ -29,7 +29,10 @@ export function initAnimationPolygon (id) {
     let deltaTime = now - then
     then = now
 
-    drawScene(gl, programInfos, buffer, deltaTime) // draw
+    drawScene(gl, programInfos, buffer) // draw
+
+    // Update the rotation for the next draw
+    squareRotation += deltaTime
 
     requestAnimationFrame(render)
   }
@@ -134,7 +137,7 @@ function initBuffer (gl) {
     color: colorBuffer
   }
 }
-function drawScene (gl, programInfos, buffer, deltaTime) {
+export function drawScene (gl, programInfos, buffer) {
   clearCanvas(gl)
 
   // Create a perspective matrix, a special matrix that is
@@ -187,5 +190,5 @@ function drawScene (gl, programInfos, buffer, deltaTime) {
   setShaderUniforms(gl, programInfos, projectionMatrix, modelViewMatrix)
 
   // Update the rotation for the next draw
-  squareRotation += deltaTime
+  // squareRotation += deltaTime
 }
