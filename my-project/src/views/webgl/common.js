@@ -37,7 +37,7 @@ export function setDrawCenterOfScene () {
 }
 
 // 设置webgl从顶点着色器的缓冲区中获取位置的方法
-export function pullOutFormVertexPos (gl, programInfos, buffer) {
+export function bufferVertexPosAttri (gl, programInfos, buffer) {
   const num = 2
   const type = gl.FLOAT
   const normalize = false
@@ -87,6 +87,7 @@ export function setShaderUniforms (gl, programInfo, projectionMatrix, modelViewM
     const vertexCount = 4
     gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount)
   }
+  // squareRotation += deltaTime
 }
 
 export function drawScene (gl, programInfo, buffers) {

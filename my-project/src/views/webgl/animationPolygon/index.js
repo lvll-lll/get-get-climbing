@@ -1,34 +1,32 @@
 /**
  * 绘制旋转的正方形
  */
-// import { mat4 } from 'gl-matrix'
+import { mat4 } from 'gl-matrix'
 import {
   initWebGL,
-  //   clearCanvas,
-  //   setPerspective,
-  //   setDrawCenterOfScene,
-  //   pullOutFormVertexPos,
-  //   pullOutColorFromFrag,
-  //   toUseProgram,
-  //   setShaderUniforms,
-  drawScene
+  clearCanvas,
+  bufferVertexPosAttri,
+  pullOutColorFromFrag,
+  setShaderUniforms
 } from '../common'
+var squareRotation = 0
 
 export function initAnimationPolygon (id) {
   let gl = initWebGL(id)
 
-  const vsSource = initBothShader()['vsSource'] // vertex shader
-  const fsSource = initBothShader()['fsSource'] // fragment shader
+  let vsSource = initBothShader()['vsSource'] // vertex shader
+  let fsSource = initBothShader()['fsSource'] // fragment shader
 
-  const shaderProgram = initShaderProgram(gl, vsSource, fsSource) // shader program
-  const programInfos = programInfo(shaderProgram, 'aVertexPosition', 'aVertexColor', 'uPorjectionMatrix', 'uModelViewMatrix') // program info
-  const buffer = initBuffer(gl) // buffer: position buffer and color buffer
+  let shaderProgram = initShaderProgram(gl, vsSource, fsSource) // shader program
+  let programInfos = programInfo(gl, shaderProgram, 'aVertexPosition', 'aVertexColor', 'uProjectionMatrix', 'uModelViewMatrix') // program info
+
+  let buffer = initBuffer(gl) // buffer: position buffer and color buffer
 
   // add animation
   let then = 0
   function render (now) {
     now *= 0.001 // conver to seconds
-    const deltaTime = now - then
+    let deltaTime = now - then
     then = now
 
     drawScene(gl, programInfos, buffer, deltaTime) // draw
@@ -39,36 +37,36 @@ export function initAnimationPolygon (id) {
 }
 
 function initBothShader () {
-  let vsSource = `
-        attribute vec4 aVertexPosition;
-        attribute vec4 aVertexColor;
+  const vsSource = `
+    attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColor;
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
+    varying lowp vec4 vColor;
+    void main(void) {
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
+    }
+  `
 
-        uniform mat4 uModelViewMatrix;
-        uniform mat4 uPorjectionMatrix;
-
-        varying lowp vec4 vColor;
-
-        void main() {
-            gl_position = uModelViewMatrix * uPorjectionMatrix * aVertexPosition;
-            vColor = aVertexColor
-        }
-    `
-  let fsSource = `
-        varying lowp vec4 vColor;
-        void main() {
-            gl_FragColor = vColor;
-        }
-    `
+  // Fragment shader program
+  const fsSource = `
+    varying lowp vec4 vColor;
+    void main(void) {
+      gl_FragColor = vColor;
+    }
+  `
   return {
     vsSource, fsSource
   }
 }
 
 function initShaderProgram (gl, vsSource, fsSource) {
-  const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
-  const fragShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+  let vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
 
-  const shaderProgram = gl.createProgram() // create
+  let fragShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+
+  let shaderProgram = gl.createProgram() // create
   gl.attachShader(shaderProgram, vertexShader) // attach
   gl.attachShader(shaderProgram, fragShader) // attach
   gl.linkProgram(shaderProgram) // link
@@ -85,7 +83,6 @@ function loadShader (gl, type, source) {
   const shader = gl.createShader(type) // create
   gl.shaderSource(shader, source) // send source
   gl.compileShader(shader) // compile
-  // return
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     console.log('An error occured compling the shader:' + gl.getShaderInfoLog(shader))
     gl.deleteShader(shader)
@@ -95,7 +92,7 @@ function loadShader (gl, type, source) {
 }
 
 function programInfo (gl, shaderProgram, vertPos, vetColor, pro, model) {
-  const info = {
+  return {
     program: shaderProgram,
     attribLocations: {
       vertexPosition: gl.getAttribLocation(shaderProgram, vertPos),
@@ -106,29 +103,28 @@ function programInfo (gl, shaderProgram, vertPos, vetColor, pro, model) {
       modelViewMatrix: gl.getUniformLocation(shaderProgram, model)
     }
   }
-  return info
 }
 
 function initBuffer (gl) {
   // position buffer
-  const positions = [
+  let positions = [
     1.0, 1.0,
     -1.0, 1.0,
     1.0, -1.0,
     -1.0, -1.0
   ]
-  const positionBuffer = gl.createBuffer()
+  let positionBuffer = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
 
   // color buffer
-  const color = [
+  let color = [
     1.0, 1.0, 1.0, 1.0,
     1.0, 0.0, 0.0, 1.0,
     0.0, 1.0, 0.0, 1.0,
     0.0, 0.0, 1.0, 1.0
   ]
-  const colorBuffer = gl.createBuffer()
+  let colorBuffer = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(color), gl.STATIC_DRAW)
 
@@ -138,12 +134,58 @@ function initBuffer (gl) {
     color: colorBuffer
   }
 }
-// function drawScene (gl, programInfos, buffer, deltaTime) {
-//   clearCanvas(gl)
-//   setPerspective(gl)
-//   setDrawCenterOfScene()
-//   pullOutFormVertexPos(gl, programInfos, buffer)
-//   pullOutColorFromFrag(gl, programInfos, buffer)
-//   toUseProgram(gl, programInfos)
-//   setShaderUniforms(gl, programInfos)
-// }
+function drawScene (gl, programInfos, buffer, deltaTime) {
+  clearCanvas(gl)
+
+  // Create a perspective matrix, a special matrix that is
+  // used to simulate the distortion of perspective in a camera.
+  // Our field of view is 45 degrees, with a width/height
+  // ratio that matches the display size of the canvas
+  // and we only want to see objects between 0.1 units
+  // and 100 units away from the camera.
+
+  const fieldOfView = 45 * Math.PI / 180 // in radians
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight
+  const zNear = 0.1
+  const zFar = 100.0
+  const projectionMatrix = mat4.create()
+
+  // note: glmatrix.js always has the first argument
+  // as the destination to receive the result.
+  mat4.perspective(projectionMatrix,
+    fieldOfView,
+    aspect,
+    zNear,
+    zFar)
+
+  // Set the drawing position to the "identity" point, which is
+  // the center of the scene.
+  const modelViewMatrix = mat4.create()
+
+  // Now move the drawing position a bit to where we want to
+  // start drawing the square.
+  mat4.translate(modelViewMatrix, // destination matrix
+    modelViewMatrix, // matrix to translate
+    [-0.0, 0.0, -6.0]) // amount to translate
+  mat4.rotate(modelViewMatrix, // destination matrix
+    modelViewMatrix, // matrix to rotate
+    squareRotation, // amount to rotate in radians
+    [0, 0, 1]) // axis to rotate around
+
+  // Tell WebGL how to pull out the positions from the position
+  // buffer into the vertexPosition attribute
+  bufferVertexPosAttri(gl, programInfos, buffer)
+
+  // Tell WebGL how to pull out the colors from the color buffer
+  // into the vertexColor attribute.
+  pullOutColorFromFrag(gl, programInfos, buffer)
+
+  // Tell WebGL to use our program when drawing
+  gl.useProgram(programInfos.program)
+
+  // Set the shader uniforms
+  setShaderUniforms(gl, programInfos, projectionMatrix, modelViewMatrix)
+
+  // Update the rotation for the next draw
+  squareRotation += deltaTime
+}

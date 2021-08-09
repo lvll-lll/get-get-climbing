@@ -2,7 +2,7 @@
   <div>
     <drawPolygon></drawPolygon>
     <colorPolygon></colorPolygon>
-    <!-- <animationPolygon></animationPolygon> -->
+    <animationPolygon></animationPolygon>
   </div>
 </template>
 
