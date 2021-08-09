@@ -3,6 +3,7 @@
     <drawPolygon></drawPolygon>
     <colorPolygon></colorPolygon>
     <animationPolygon></animationPolygon>
+    <threeDObjects></threeDObjects>
   </div>
 </template>
 
@@ -10,7 +11,8 @@
 import drawPolygon from './purePolygon/drawPolygon.vue'
 import colorPolygon from './colorPolygon/colorPolygon.vue'
 import animationPolygon from './animationPolygon/index.vue'
+import threeDObjects from './3DObjects/index.vue'
 export default {
-  components: {drawPolygon, colorPolygon, animationPolygon}
+  components: {drawPolygon, colorPolygon, animationPolygon, threeDObjects}
 }
 </script>
