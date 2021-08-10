@@ -1,5 +1,5 @@
 <template>
-    <div id="threeD"></div>
+    <canvas id="threeD"></canvas>
 </template>
 
 <script>
