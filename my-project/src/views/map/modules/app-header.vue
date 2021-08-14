@@ -22,8 +22,8 @@ export default {
   height: 2rem;
   line-height: 2rem;
   position: absolute;
-  // top: 1.2rem;
-  top: 5rem;
+  top: 1.2rem;
+  // top: 5rem;
   left: calc(50% - 13rem);
   z-index: 99;
   color: white;

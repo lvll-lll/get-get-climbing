@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <!-- <navigation></navigation> -->
+    <navigation></navigation>
     <div class="app-main">
-      <navigation></navigation>
+      <!-- <navigation></navigation> -->
       <router-view />
     </div>
 
@@ -41,8 +41,8 @@ li {
   cursor: pointer;
 }
 .app-main {
-  // height: calc(100% - 68px);
-  height: 100%;
+  height: calc(100% - 68px);
+  // height: 100%;
   width: 100%;
   // background: white;
 }

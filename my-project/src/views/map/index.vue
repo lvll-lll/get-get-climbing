@@ -100,7 +100,7 @@ export default {
     height: 100%;
     position: absolute;
     top: 0;
-    padding: 5rem 1rem 1rem 1rem;
+    // padding: 5rem 1rem 1rem 1rem;
     &.left {
       left: 0;
     }

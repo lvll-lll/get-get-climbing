@@ -6,17 +6,16 @@
         :key="item.key"
         @click="handleClick(item)"
         @mouseover="handleMouseOver(item)"
-        @mouseleave="handleMouseLeave"
+        @mouseleave="handleMouseLeaveParent"
         @mouseenter="handleMouseEnter"
       >{{item.label}}</li>
     </ul>
     <div class="drop-down-list" ref="drop-list" v-if="showChildItems">
-      <ul class="drop-ul">
+      <ul class="drop-ul" @mouseleave="handleMouseLeave">
         <li v-for="ul in chlidList" class="drop-li"
           :key="ul.key"
           @click="handleClick(ul)"
         >{{ul.label}}</li>
-        <li>11</li>
       </ul>
     </div>
 
@@ -29,9 +28,20 @@ export default {
   data () {
     return {
       list: [
-        { key: 'task', label: 'task', router: '/task', chlid: [] },
-        { key: 'transfer', label: 'transfer', router: '/transfer', chlid: [] },
-        { key: 'map', label: 'map', router: '/map', chlid: [] },
+        { key: 'task', label: 'task', router: '/task',
+          chlid: [
+            { key: 'map', label: 'map1', router: '/map' },
+            { key: 'transfer', label: 'transfer1', router: '/transfer' },
+          ]
+        },
+        { key: 'transfer', label: 'Components', router: '/transfer', chlid: [
+            { key: 'transfer', label: 'transfer', router: '/transfer' }
+          ]
+        },
+        { key: 'map', label: 'map', router: '/map', chlid: [
+          { key: 'transfer', label: 'transfer2', router: '/transfer' },
+          ]
+        },
         { key: 'webgl', label: 'webgl', router: '/webgl',
           chlid: [
             { key: 'map', label: 'map', router: '/map' },
@@ -49,6 +59,7 @@ export default {
         return
       }
       this.$router.push(item.router)
+      this.showChildItems = false
     },
     handleMouseOver(item, event) {
       console.log(item)
@@ -69,6 +80,9 @@ export default {
     handleMouseLeave() {
       this.showChildItems = false
       // this.$refs['nav'].style.setProperty("--navHeight", 'unset');
+    },
+    handleMouseLeaveParent() {
+      // this.showChildItems = false
     }
   }
 }
@@ -78,13 +92,13 @@ export default {
 .navigation-container {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   background: white;
-  // height: 68px;
-  height: var(--navHeight);
+  height: 68px;
+  // height: var(--navHeight);
   line-height: 68px;
   width: 100%;
-  position: fixed;
-  z-index: 999;
-  background: rgba(255,255,255,0.4);
+  // position: fixed;
+  // z-index: 999;
+  // background: rgba(255,255,255,0.4);
   // box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 .menus {
@@ -111,7 +125,7 @@ export default {
   position: absolute;
   left: var(--x);
   top: var(--y);
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,1);
   z-index: 999;
   height: var(--height);
   .drop-ul{
@@ -119,6 +133,9 @@ export default {
     .drop-li{
       height: 40px;
       line-height: 40px;
+      &:hover{
+        background: rgb(217, 238, 247);
+      }
     }
   }
 }
