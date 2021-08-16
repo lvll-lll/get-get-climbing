@@ -30,8 +30,8 @@ export default {
       list: [
         { key: 'task', label: 'task', router: '/task',
           chlid: [
-            { key: 'map', label: 'map1', router: '/map' },
-            { key: 'transfer', label: 'transfer1', router: '/transfer' },
+            // { key: 'map', label: 'map1', router: '/map' },
+            // { key: 'transfer', label: 'transfer1', router: '/transfer' },
           ]
         },
         { key: 'transfer', label: 'Components', router: '/transfer', chlid: [
@@ -39,13 +39,13 @@ export default {
           ]
         },
         { key: 'map', label: 'map', router: '/map', chlid: [
-          { key: 'transfer', label: 'transfer2', router: '/transfer' },
+          { key: 'map', label: 'map', router: '/map' },
           ]
         },
         { key: 'webgl', label: 'webgl', router: '/webgl',
           chlid: [
             { key: 'map', label: 'map', router: '/map' },
-            { key: 'transfer', label: 'transfer', router: '/transfer' },
+            { key: 'webgl', label: 'webgl', router: '/webgl' },
           ]
         }
       ],
@@ -108,7 +108,7 @@ export default {
     height: 20px;
     line-height: 20px;
     // cursor: pointer;
-    width: 85px;
+    width: 112px;
     border-right: 2px solid #1da1f2;
     text-align: center;
     margin-top: 25px;
@@ -121,7 +121,7 @@ export default {
   }
 }
 .drop-down-list{
-  width: 85px;
+  width: 112px;
   position: absolute;
   left: var(--x);
   top: var(--y);
