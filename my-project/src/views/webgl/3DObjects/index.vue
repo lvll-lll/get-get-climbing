@@ -5,6 +5,7 @@
 <script>
 import { color } from 'echarts'
 import { mat4 } from 'gl-matrix'
+import { main } from './index'
 // import { drawScene } from '../animationPolygon/index'
 export default {
   data () {
@@ -14,7 +15,8 @@ export default {
     }
   },
   mounted () {
-    this.initCanvas()
+    // this.initCanvas()
+    main()
   },
   methods: {
     initCanvas () {
