@@ -4,11 +4,13 @@
 
 <script>
 import { mat4 } from 'gl-matrix'
+import img from './gansu.png'
 export default {
   data () {
     return {
       squareRotation: 0,
-      cubeRotation: 0.0
+      cubeRotation: 0.0,
+      img: img
     }
   },
   mounted () {
@@ -45,7 +47,7 @@ export default {
       }
       let buffer = this.init3DBuffer(gl)
 
-      const texture = this.loadTexture(gl, 'gansu.png')
+      const texture = this.loadTexture(gl, this.img)
 
       let then = 0
       const _that = this
@@ -80,7 +82,7 @@ export default {
         gl.bindTexture(gl.TEXTURE_2D, texture)
         gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image)
         if ((image.width & (image.width - 1)) === 0 && (image.width & (image.width - 1)) === 0) {
-          gl.genterateMipmap(gl.TEXTURE_2D)
+          gl.generateMipmap(gl.TEXTURE_2D)
         } else {
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
@@ -336,3 +338,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+canvas{
+  background-color: #c6eccb;
+}
+</style>
