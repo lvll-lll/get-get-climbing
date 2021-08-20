@@ -1,5 +1,5 @@
 <template>
-    <canvas id="threeD"></canvas>
+    <canvas id="threeDTexture"></canvas>
 </template>
 
 <script>
@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     initCanvas () {
-      let canvas = document.querySelector('#threeD')
+      let canvas = document.querySelector('#threeDTexture')
       let gl = canvas.getContext('webgl')
       if (!gl) {
         console.log('the device is not support webgl')
@@ -35,14 +35,17 @@ export default {
         program: shaderProgram,
         attribLocations: {
           vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-          vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor')
+          textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord')
         },
         uniformLocations: {
           projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
-          modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix')
+          modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+          uSampler: gl.getUniformLocation(shaderProgram, 'uSampler')
         }
       }
       let buffer = this.init3DBuffer(gl)
+
+      const texture = this.loadTexture(gl, 'gansu.png')
 
       let then = 0
       const _that = this
@@ -51,17 +54,46 @@ export default {
         let deltaTime = now - then
         then = now
 
-        _that.drawScene(gl, programInfo, buffer, deltaTime)
+        _that.drawScene(gl, programInfo, buffer, texture, deltaTime)
         _that.squareRotation += deltaTime
 
         requestAnimationFrame(render)
       }
       requestAnimationFrame(render)
     },
+    loadTexture (gl, png) {
+      const texture = gl.createTexture()
+      gl.bindTexture(gl.TEXTURE_2D, texture)
+
+      const level = 0
+      const internalFormat = gl.RGBA
+      const width = 1
+      const height = 1
+      const border = 0
+      const srcFormat = gl.RGBA
+      const srcType = gl.UNSIGNED_BYTE
+      const pixel = new Uint8Array([0, 0, 255, 255])
+      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel)
+
+      const image = new Image()
+      image.onload = function () {
+        gl.bindTexture(gl.TEXTURE_2D, texture)
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image)
+        if ((image.width & (image.width - 1)) === 0 && (image.width & (image.width - 1)) === 0) {
+          gl.genterateMipmap(gl.TEXTURE_2D)
+        } else {
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+        }
+      }
+      image.src = png
+      return texture
+    },
     init3DBuffer (gl) {
+      // 1. position buffer
       const positionBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-
       const positions = [
         // Front face
         -1.0, -1.0, 1.0,
@@ -100,6 +132,8 @@ export default {
         -1.0, 1.0, -1.0
       ]
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+
+      // 2. face buffer
       const faceColor = [
         [1.0, 1.0, 1.0, 1.0], // Front face: white
         [1.0, 0.0, 0.0, 1.0], // Back face: red
@@ -117,6 +151,7 @@ export default {
       gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW)
 
+      // 3. index buffer
       const indexBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
       const indices = [
@@ -128,9 +163,48 @@ export default {
         20, 21, 22, 20, 22, 23 // left
       ]
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
+
+      // 4. texture buffer
+      const textureBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
+      const textureCoordinates = [
+        // Front
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        // Back
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        // Top
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        // Bottom
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        // Right
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        // Left
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
+      ]
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW)
+
       return {
         position: positionBuffer,
-        color: colorBuffer,
+        // color: colorBuffer,
+        textureCoord: textureBuffer,
         indices: indexBuffer
       }
     },
@@ -160,29 +234,31 @@ export default {
     },
     initShader () {
       const vsSource = `
-        attribute vec4 aVertexPosition;
-        attribute vec4 aVertexColor;
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
 
         uniform mat4 uModelViewMatrix;
         uniform mat4 uProjectionMatrix;
 
-        varying lowp vec4 vColor;
+        varying highp vec2 vTextureCoord;
 
         void main(void) {
-            gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-            vColor = aVertexColor;
+            gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
+            vTextureCoord = aTextureCoord;
         }
       `
       const fsSource = `
-        varying lowp vec4 vColor;
+        varying highp vec2 vTextureCoord;
+
+        uniform sampler2D uSampler;
         
         void main(void) {
-            gl_FragColor = vColor;
+            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
         }
       `
       return {vsSource: vsSource, fsSource: fsSource}
     },
-    drawScene (gl, paramInfo, buffers, deltaTime) {
+    drawScene (gl, paramInfo, buffers, texture, deltaTime) {
       gl.clearColor(0.0, 0.0, 0.0, 1.0)
       gl.clearDepth(1.0)
       gl.enable(gl.DEPTH_TEST)
@@ -226,22 +302,29 @@ export default {
           paramInfo.attribLocations.vertexPosition)
       }
       {
-        const numComponents = 4
+        const numComponents = 2
         const type = gl.FLOAT
         const normalize = false
         const stride = 0
         const offset = 0
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color)
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textureCoord)
         gl.vertexAttribPointer(
-          paramInfo.attribLocations.vertexColor,
+          paramInfo.attribLocations.textureCoord,
           numComponents, type, normalize, stride, offset
         )
-        gl.enableVertexAttribArray(paramInfo.attribLocations.vertexColor)
+        gl.enableVertexAttribArray(paramInfo.attribLocations.textureCoord)
       }
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices)
       gl.useProgram(paramInfo.program)
       gl.uniformMatrix4fv(paramInfo.uniformLocations.projectionMatrix, false, projectionMatrix)
       gl.uniformMatrix4fv(paramInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix)
+
+      /** ****************** use texture - the start ****************** */
+      gl.activeTexture(gl.TEXTURE0) // tell webgl we want to affect textrue unit 0 - active texture function
+      gl.bindTexture(gl.TEXTURE_2D, texture) // bind the texture to texture unit 0 - bind texture
+      gl.uniform1i(paramInfo.uniformLocations.uSampler, 0) // tell the shader we bound the texture to texture unit 0 - uniform texture
+      /** ****************** use texture - the end ****************** */
+
       {
         const vertextCount = 36
         const type = gl.UNSIGNED_SHORT
