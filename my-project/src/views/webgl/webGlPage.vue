@@ -1,10 +1,11 @@
 <template>
   <div>
-    <drawPolygon></drawPolygon>
+    <!-- <drawPolygon></drawPolygon>
     <colorPolygon></colorPolygon>
     <animationPolygon></animationPolygon>
     <threeDObjects></threeDObjects>
-    <threeDObjectsTexture></threeDObjectsTexture>
+    <threeDObjectsTexture></threeDObjectsTexture> -->
+    <threedDLighting></threedDLighting>
   </div>
 </template>
 
@@ -14,7 +15,8 @@ import colorPolygon from './colorPolygon/colorPolygon.vue'
 import animationPolygon from './animationPolygon/index.vue'
 import threeDObjects from './3DObjects/index.vue'
 import threeDObjectsTexture from './3dObjectsTexture/index.vue'
+import threedDLighting from './6Lighting/index.vue'
 export default {
-  components: {drawPolygon, colorPolygon, animationPolygon, threeDObjects, threeDObjectsTexture}
+  components: {drawPolygon, colorPolygon, animationPolygon, threeDObjects, threeDObjectsTexture, threedDLighting}
 }
 </script>
