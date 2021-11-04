@@ -43,11 +43,13 @@ export default {
         program: shaderProgram,
         attribLocations: {
           vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+          vertexNormal: gl.getAttribLocation(shaderProgram, 'aVertexNormal'),
           textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord')
         },
         uniformLocations: {
           projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
           modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+          normalMatrix: gl.getUniformLocation(shaderProgram, 'uNormalMatrix'),
           uSampler: gl.getUniformLocation(shaderProgram, 'uSampler')
         }
       }
@@ -94,8 +96,11 @@ export default {
       mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0])
       mat4.rotate(modelViewMatrix, modelViewMatrix, this.cubeRotation, [0, 0, 1]) // 绕z轴旋转
       mat4.rotate(modelViewMatrix, modelViewMatrix, this.cubeRotation * 0.7, [0, 1, 0]) // 绕y轴旋转
-      mat4.rotate(modelViewMatrix, modelViewMatrix, this.cubeRotation * 0.5, [1, 0, 0]) // 绕x轴旋转
+      // mat4.rotate(modelViewMatrix, modelViewMatrix, this.cubeRotation * 0.5, [1, 0, 0]) // 绕x轴旋转
 
+      const normalMatrix = mat4.create()
+      mat4.invert(normalMatrix, modelViewMatrix)
+      mat4.transpose(normalMatrix, normalMatrix)
       {
         const numComponents = 3
         const type = gl.FLOAT
@@ -126,10 +131,28 @@ export default {
         )
         gl.enableVertexAttribArray(paramInfo.attribLocations.textureCoord)
       }
+      {
+        const numComponents = 3
+        const type = gl.FLOAT
+        const normalize = false
+        const stride = 0
+        const offset = 0
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal)
+        gl.vertexAttribPointer(
+          paramInfo.attribLocations.vertexNormal,
+          numComponents,
+          type,
+          normalize,
+          stride,
+          offset)
+        gl.enableVertexAttribArray(
+          paramInfo.attribLocations.vertexNormal)
+      }
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices)
       gl.useProgram(paramInfo.program)
       gl.uniformMatrix4fv(paramInfo.uniformLocations.projectionMatrix, false, projectionMatrix)
       gl.uniformMatrix4fv(paramInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix)
+      gl.uniformMatrix4fv(paramInfo.uniformLocations.normalMatrix, false, normalMatrix)
 
       /** ****************** use texture - the start ****************** */
       gl.activeTexture(gl.TEXTURE0) // tell webgl we want to affect textrue unit 0 - active texture function
@@ -330,6 +353,7 @@ export default {
       return {
         position: positionBuffer,
         // color: colorBuffer,
+        normal: cubeVerticesNormalBuffer,
         textureCoord: textureBuffer,
         indices: indexBuffer
       }
@@ -360,18 +384,24 @@ export default {
     },
     initShader () {
       const vsSource = `
-        attribute highp vec3 aVertexNormal;
-        attribute highp vec3 aVertexPosition;
+        attribute vec4 aVertexPosition;
+        attribute vec3 aVertexNormal;
         attribute vec2 aTextureCoord;
-
-        uniform highp mat4 uModelViewMatrix;
+        uniform mat4 uNormalMatrix;
+        uniform mat4 uModelViewMatrix;
         uniform mat4 uProjectionMatrix;
-
         varying highp vec2 vTextureCoord;
-
+        varying highp vec3 vLighting;
         void main(void) {
-            gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
-            vTextureCoord = aTextureCoord;
+          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+          vTextureCoord = aTextureCoord;
+          // Apply lighting effect
+          highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+          highp vec3 directionalLightColor = vec3(1, 1, 1);
+          highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
+          highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+          highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+          vLighting = ambientLight + (directionalLightColor * directional);
         }
       `
       const fsSource = `
@@ -381,7 +411,8 @@ export default {
         uniform sampler2D uSampler;
         
         void main(void) {
-            gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a)
+          highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
+          gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
         }
       `
       return {vsSource, fsSource}
