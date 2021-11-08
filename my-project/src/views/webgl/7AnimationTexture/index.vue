@@ -7,7 +7,7 @@
 <script>
 import img from '@/views/webgl/3dObjectsTexture/gansu.png'
 import {mat4} from 'gl-matrix'
-import videoUrl from '@/views/webgl/7AnimationTexture/Firefox.mp4'
+import videoUrl from './Firefox.mp4'
 // 添加视频纹理
 export default {
   data () {
@@ -33,8 +33,9 @@ export default {
       this.initProgram(gl)
     },
     initProgram (gl) {
-      let vsSource = this.initShader()['vsSource']
-      let fsSource = this.initShader()['fsSource']
+      const shader = this.initShader()
+      let vsSource = shader['vsSource']
+      let fsSource = shader['fsSource']
 
       let shaderProgram = this.initShaderProgram(gl, vsSource, fsSource)
       const programInfo = {
@@ -56,7 +57,7 @@ export default {
 
       // const texture = this.loadTexture(gl, this.img)
       const texture = this.initTexture(gl)
-      const video = this.setupVideo('static/media/Firefox.mp4')
+      const video = this.setupVideo(this.videoUrl)
 
       let then = 0
       const _that = this
@@ -66,7 +67,7 @@ export default {
         then = now
 
         if (_that.copyVideo) {
-          this.updateTexture(gl, texture, video)
+          _that.updateTexture(gl, texture, video)
         }
 
         _that.drawScene(gl, programInfo, buffer, texture, deltaTime)
@@ -440,7 +441,7 @@ export default {
       }, true)
 
       video.addEventListener('timeupdate', function () {
-        this.timeupdate = true
+        timeupdate = true
         checkReady(playing, timeupdate)
       }, true)
 
