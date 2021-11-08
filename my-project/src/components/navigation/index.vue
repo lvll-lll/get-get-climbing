@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { env } from 'echarts'
 export default {
   data () {
     return {
@@ -62,11 +61,10 @@ export default {
       this.showChildItems = false
     },
     handleMouseOver(item, event) {
-      console.log(item)
       if(item.chlid && item.chlid.length > 0) {
         this.showChildItems = true
         this.chlidList = item.chlid
-        this.$refs['drop-list'].style.setProperty("--height", item.chlid.length * 40 + 'px');
+        // this.$refs['drop-list'].style.setProperty("--height", item.chlid.length * 40 + 'px');
         this.$refs['nav'].style.setProperty("--navHeight", 68 + item.chlid.length * 40 + 'px');
       }
     },
