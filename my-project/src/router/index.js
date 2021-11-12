@@ -26,6 +26,10 @@ export default new Router({
       path: '/task',
       name: 'task',
       component: () => import('@/views/maps/index.vue')
+    }, {
+      path: '/css',
+      name: '/css',
+      component: () => import('@/views/webgl/CSSandWebgl/index.vue')
     }
   ]
 })

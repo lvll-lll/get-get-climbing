@@ -43,8 +43,8 @@ export default {
         },
         { key: 'webgl', label: 'webgl', router: '/webgl',
           chlid: [
-            { key: 'map', label: 'map', router: '/map' },
             { key: 'webgl', label: 'webgl', router: '/webgl' },
+            { key: 'css', label: 'CSS', router: '/css' },
           ]
         }
       ],
