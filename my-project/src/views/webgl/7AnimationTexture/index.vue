@@ -388,6 +388,10 @@ export default {
       return shaderProgram
     },
     initShader () {
+      /**
+       * Variables of opaque types can be declared in one of two ways. They can be declared at global scope,
+       * as a uniform variables
+       */
       const vsSource = `
         attribute vec4 aVertexPosition;
         attribute vec3 aVertexNormal;
