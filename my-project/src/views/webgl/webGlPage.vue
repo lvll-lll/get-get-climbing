@@ -1,12 +1,12 @@
 <template>
   <div>
-    <!-- <drawPolygon></drawPolygon>
+    <!-- <drawPolygon></drawPolygon> -->
     <colorPolygon></colorPolygon>
-    <animationPolygon></animationPolygon>
-    <threeDObjects></threeDObjects>
-    <threeDObjectsTexture></threeDObjectsTexture>
-    <threedDLighting></threedDLighting> -->
-    <animationTexture></animationTexture>
+    <!-- <animationPolygon></animationPolygon> -->
+    <!-- <threeDObjects></threeDObjects> -->
+    <!-- <threeDObjectsTexture></threeDObjectsTexture> -->
+    <!-- <threedDLighting></threedDLighting> -->
+    <!-- <animationTexture></animationTexture> -->
   </div>
 </template>
 

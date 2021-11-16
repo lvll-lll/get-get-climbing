@@ -29,9 +29,15 @@ export function initColorPolygon (id) {
   // Fragment shader program
 
   const fsSource = `
+    precision mediump float;
+
     varying lowp vec4 vColor;
+    uniform float u_time;
+    
     void main(void) {
       gl_FragColor = vColor;
+      // gl_FragColor = vec4(abs(sin(u_time)),vColor.xyz);
+      // gl_FragColor = vec4(abs(sin(u_time)),0.0,0.0,1.0);
     }
   `
 
