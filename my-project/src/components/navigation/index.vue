@@ -45,6 +45,7 @@ export default {
           chlid: [
             { key: 'webgl', label: 'webgl', router: '/webgl' },
             { key: 'css', label: 'CSS', router: '/css' },
+            { key: 'threeJS', label: 'threeJS', router: '/threeJS'}
           ]
         }
       ],

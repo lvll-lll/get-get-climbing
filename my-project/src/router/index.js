@@ -23,6 +23,10 @@ export default new Router({
       name: 'webgl',
       component: () => import('@/views/webgl/webGlPage.vue')
     }, {
+      path: '/threeJS',
+      name: 'threeJS',
+      component: () => import('@/views/ThreeJS/index.vue')
+    }, {
       path: '/task',
       name: 'task',
       component: () => import('@/views/maps/index.vue')

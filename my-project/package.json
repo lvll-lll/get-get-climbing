@@ -16,9 +16,11 @@
   "dependencies": {
     "echarts": "^5.1.2",
     "element-ui": "^2.15.3",
-    "mapbox-gl": "^1.8.1",
     "gl-matrix": "^3.3.0",
+    "mapbox-gl": "^1.8.1",
     "ol": "^6.5.0",
+    "three": "^0.134.0",
+    "three-orbitcontrols": "^2.110.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "wd-domsize-monitor": "^1.1.0"
