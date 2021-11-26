@@ -1,17 +1,16 @@
 <template>
-  <div>three js</div>
+  <div>
+    <PaPa1></PaPa1>
+  </div>
 </template>
 <script>
-import * as THREE from 'three'
+import PaPa1 from './papa1.vue'
 export default {
+  components: {PaPa1},
   mounted () {
-    this.init()
+    // this.init()
   },
   methods: {
-    init () {
-      const scene = new THREE.Scene()
-      console.log(scene)
-    }
   }
 }
 </script>
