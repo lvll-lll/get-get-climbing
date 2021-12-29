@@ -34,7 +34,8 @@ export default {
           ]
         },
         { key: 'transfer', label: 'Components', router: '/transfer', chlid: [
-            { key: 'transfer', label: 'transfer', router: '/transfer' }
+            { key: 'transfer', label: 'transfer', router: '/transfer' },
+            { key: 'promise', label: '手写promise', router: '/promise' }
           ]
         },
         { key: 'map', label: 'map', router: '/map', chlid: [

@@ -34,6 +34,10 @@ export default new Router({
       path: '/css',
       name: '/css',
       component: () => import('@/views/webgl/CSSandWebgl/index.vue')
+    }, {
+      path: '/promise',
+      name: '/promise',
+      component: () => import('@/views/transfer/promise.vue')
     }
   ]
 })
