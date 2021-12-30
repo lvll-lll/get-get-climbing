@@ -4,6 +4,7 @@
     <li v-show="showTips1" v-for="(item,i) in promiseResult" :key="i + '1i1'">{{item}}</li>
     <el-button @click="handlePromise">promise执行点</el-button>
     <li v-show="showTips2" v-for="(item,i) in promiseHandle" :key="i + '1i2'">{{item}}</li>
+    <el-button @click="creatPromise">测试异步执行</el-button>
   </div>
 </template>
 
@@ -41,12 +42,12 @@ export default {
   methods: {
     init () {},
     creatPromise () {
-      class myPromise {
+      class MyPromise {
         static PENDING = 'pending'
         static FULFILLED = 'fulfilled'
         static REJECTED = 'rejected'
         constructor (func) { // promise实例必须传入一个参数：函数
-          this.PromiseState = myPromise.PENDING // 存储promise的状态，默认pending
+          this.PromiseState = MyPromise.PENDING // 存储promise的状态，默认pending
           this.PromiseResult = null
           try {
             func(this.resolve.bind(this), this.reject.bind(this)) // 绑定this.注：此处需要进行this绑定的原因,因为这里把类方法this.reject和this.resolve作为构造函数里要执行的func函数的一个参数，并不会立即执行，只有当这个示例被创建后才会调用resolve()和reject()这两个方法，这时候的this指向已经变了，所以想要正确调用这个类的这两个方法，就必须是使用bind，将这里个方法的this指向绑定到新建的示例上去
@@ -55,14 +56,14 @@ export default {
           }
         }
         resolve (result) {
-          if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.FULFILLED
+          if (this.PromiseState === MyPromise.PENDING) {
+            this.PromiseState = MyPromise.FULFILLED
             this.PromiseResult = result
           }
         }
         reject (reason) {
-          if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.REJECTED
+          if (this.PromiseState === MyPromise.PENDING) {
+            this.PromiseState = MyPromise.REJECTED
             this.promiseResult = reason
           }
         }
@@ -71,20 +72,36 @@ export default {
           onRejected = typeof onRejected === 'function' ? onRejected : reason => {
             throw new Error(reason)
           } // 如果onRejected不是一个函数，则throw一个error
-          if (this.PromiseState === myPromise.FULFILLED) {
+          if (this.PromiseState === MyPromise.FULFILLED) {
             setTimeout(() => { // 异步
               onFulfilled(this.PromiseResult)
             })
           }
-          if (this.PromiseState === myPromise.REJECTED) {
+          if (this.PromiseState === MyPromise.REJECTED) {
             setTimeout(() => {
               onRejected(this.promiseResult)
             })
           }
         }
       } // 创建一个myPromise类
-      let promise = new myPromise()
-      console.log(promise)
+      // return new MyPromise()
+      console.log('1')
+      let promise = new MyPromise((resolve, reject) => {
+        console.log('2')
+        setTimeout(() => {
+          console.log('A:', promise.PromiseState)
+          resolve('执行resolve输出')
+          console.log('B:', promise.PromiseState)
+          console.log('4')
+        })
+      })
+      promise.then(res => {
+        console.log('C:', promise.PromiseState)
+        console.log('fulfilled:', res)
+      }, err => {
+        console.log('rejected:', err)
+      })
+      console.log('3')
       /**
        * 总结：this绑定的区别
        * 1、call和apply绑定，会立即执行
