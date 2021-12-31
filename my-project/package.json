@@ -11,7 +11,8 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "test-promise": "promises-aplus-tests MyPromise"
   },
   "dependencies": {
     "echarts": "^5.1.2",
@@ -70,6 +71,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
+    "promises-aplus-tests": "^2.1.2",
     "rimraf": "^2.6.0",
     "sass-loader": "^7.3.1",
     "selenium-server": "^3.0.1",
