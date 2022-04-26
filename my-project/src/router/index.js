@@ -37,7 +37,7 @@ export default new Router({
     }, {
       path: '/promise',
       name: '/promise',
-      component: () => import('@/views/transfer/promise.vue')
+      component: () => import('@/views/learn/promise.vue')
     }
   ]
 })

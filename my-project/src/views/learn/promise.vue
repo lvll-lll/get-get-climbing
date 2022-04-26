@@ -5,6 +5,7 @@
     <el-button @click="handlePromise">promise执行点</el-button>
     <li v-show="showTips2" v-for="(item,i) in promiseHandle" :key="i + '1i2'">{{item}}</li>
     <el-button @click="creatPromise">测试异步执行</el-button>
+    <span>{{ studentInfo }}</span>
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 /**
  * 手写promise的几个知识点：Promise,Class类,改变this指向(call、apply和bind),时间循环EvnetLoop,等
  */
+import Student from '@/views/utils/copy.ts'
 export default {
   data () {
     return {
@@ -35,6 +37,9 @@ export default {
       showTips1: false,
       showTips2: false
     }
+  },
+  computed () {
+    this.studentInfo = new Student('Jane', 'M.', 'User')
   },
   mounted () {
     this.init()
